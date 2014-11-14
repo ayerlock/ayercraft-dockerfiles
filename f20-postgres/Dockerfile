@@ -9,10 +9,12 @@ ENV PGDATA /var/lib/pgsql/data
 ENV PGPORT 5432
 
 ADD ./supervisord.conf /etc/supervisord.conf
-ADD ./postgres-start.sh /
+ADD ./supervisord-postgres.conf /etc/supervisord.d/postgres.conf
+ADD ./postgres-entrypoint.sh /
 
-RUN yum -y update && yum clean all && yum -y install postgresql postgresql-server postgresql-contrib supervisor && yum clean all
-RUN curl -o /usr/local/bin/gosu -SL 'https://github.com/tianon/gosu/releases/download/1.0/gosu' && chmod +x /usr/local/bin/gosu && chmod 775 /postgres-start.sh
+RUN yum -y update && yum -y install postgresql postgresql-server postgresql-contrib supervisor && yum clean all
+RUN curl -o /usr/local/bin/gosu -SL 'https://github.com/tianon/gosu/releases/download/1.0/gosu' && chmod +x /usr/local/bin/gosu
+RUN chmod 775 /postgres-entrypoint.sh
 
 VOLUME /var/lib/pgsql
 
@@ -20,6 +22,7 @@ USER postgres
 WORKDIR /var/lib/pgsql
 
 USER root
+ENTRYPOINT ["/postgres-entrypoint.sh"]
 EXPOSE 5432
 
-CMD ["/postgres-start.sh"]
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
