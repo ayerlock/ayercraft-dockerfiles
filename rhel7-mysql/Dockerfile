@@ -1,4 +1,4 @@
-FROM docker.lab.ayercraft.net/rhel7
+FROM registry.access.redhat.com/rhel7:latest
 MAINTAINER Michael J. Ayers <ayersm@gmail.com>
  
 # Update the image with the latest packages (recommended) and install Apache Web Server
