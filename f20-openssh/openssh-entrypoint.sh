@@ -1,7 +1,7 @@
 #!/bin/bash
 
 generate_keys() {
-	echo -e "Generating container SSH Host Keys."
+	echo -e "  Generating container SSH Host Keys."
 	ssh-keygen -q -t ecdsa -b 521 -f /etc/ssh/ssh_host_ecdsa_key -N ''
 	ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
 }
@@ -29,7 +29,7 @@ create_user() {
 
 	echo -e "  Container User Account:\t${SSHUSER}"
 	useradd ${SSHUSER}
-	echo -e "${SSHPASS}\n${SSHPASS}" | (passwd --stdin ${SSHUSER})
+	echo -e "${SSHPASS}\n${SSHPASS}" | (passwd --stdin ${SSHUSER} 2>&1 >> /dev/null)
 	echo -e "  Container User Password:\t${SSHPASS}"
 }
 
